@@ -9,7 +9,11 @@ from pygame.locals import (
     K_UP,
     K_DOWN,
     K_LEFT,
-    K_RIGHT
+    K_RIGHT,
+    K_w,
+    K_a,
+    K_s,
+    K_d
 )
 
 # Initialize Pygame
@@ -18,7 +22,7 @@ screen = pygame.display.set_mode((0, 0), FULLSCREEN)
 clock = pygame.time.Clock()
 
 # Define the Snake class
-class Snake:
+class Snake1:
     def __init__(self, x, y):
         self.body = [(x, y)]
         self.direction = 'RIGHT'
@@ -51,8 +55,43 @@ class Snake:
         tail_x, tail_y = self.body[-1]
         self.body.append((tail_x, tail_y))
 
-# Initialize the Snake
+
+class Snake2:
+    def __init__(self, x, y):
+        self.body = [(x, y)]
+        self.direction = 'LEFT'
+    
+    def move(self):
+        head_x, head_y = self.body[0]
+        new_head = (head_x, head_y)  # Default: no movement
+        
+        if self.direction == 'UP':
+            new_head = (head_x, head_y - 10)
+        elif self.direction == 'DOWN':
+            new_head = (head_x, head_y + 10)
+        elif self.direction == 'LEFT':
+            new_head = (head_x - 10, head_y)
+        elif self.direction == 'RIGHT':
+            new_head = (head_x + 10, head_y)
+        
+        self.body.insert(0, new_head)
+        self.body.pop()  # Remove the tail to keep the same length
+    
+    def change_direction(self, new_direction):
+        if new_direction in ['UP', 'DOWN', 'LEFT', 'RIGHT']:
+            if (new_direction == 'UP' and self.direction != 'DOWN') or \
+               (new_direction == 'DOWN' and self.direction != 'UP') or \
+               (new_direction == 'LEFT' and self.direction != 'RIGHT') or \
+               (new_direction == 'RIGHT' and self.direction != 'LEFT'):
+                self.direction = new_direction
+    
+    def grow(self):
+        tail_x, tail_y = self.body[-1]
+        self.body.append((tail_x, tail_y))
+
+# Initialize the two Snakes
 snake = Snake(400, 300)
+snake2 = Snake(width-400, height-300)
 
 # Game loop
 running = True
@@ -71,6 +110,15 @@ while running:
                 snake.change_direction('LEFT')
             elif event.key == K_RIGHT:
                 snake.change_direction('RIGHT')
+            elif event.key == K_w:
+                snake.change_direction('UP')
+            elif event.key == K_s:
+                snake.change_direction('DOWN')
+            elif event.key == K_a:
+                snake.channge_direction('LEFT')
+            elif event.key == K_d:
+                snake.change_direction('RIGHT')
+
 
     # Move the snake
     snake.move()
